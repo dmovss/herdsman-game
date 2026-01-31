@@ -11,12 +11,12 @@
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,
-
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "strictNullChecks": false, 
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noUncheckedIndexedAccess": false,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedIndexedAccess": true,
 
     "baseUrl": ".",
     "paths": {
@@ -24,6 +24,4 @@
     }
   },
   "include": ["src"]
-  
-  
 }

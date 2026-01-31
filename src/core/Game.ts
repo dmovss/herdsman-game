@@ -8,6 +8,7 @@ import { SoundManager } from '../managers/SoundManager';
 import { HUD } from '../ui/HUD';
 import { StartScreen } from '../ui/StartScreen';
 
+
 export class Game {
   private static instance: Game | null = null;
   

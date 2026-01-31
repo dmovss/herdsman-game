@@ -8,6 +8,7 @@ export class Hero extends BaseEntity {
   private targetPosition: PIXI.Point | null = null;
   private speed: number;
   private shadow: PIXI.Graphics;
+  
 
   constructor(x: number, y: number) {
     super();
