@@ -1,0 +1,21 @@
+{
+  "name": "herdsman-game",
+  "version": "1.0.0",
+  "description": "Professional herdsman collection game built with PixiJS and TypeScript",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "pixi.js": "^8.5.2",
+    "@pixi/sound": "^6.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.10",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5"
+  }
+}
