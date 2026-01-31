@@ -1,21 +1,30 @@
 {
   "name": "herdsman-game",
-  "version": "1.0.0",
-  "description": "Professional herdsman collection game built with PixiJS and TypeScript",
-  "private": true,
+  "version": "2.0.0",
+  "description": "Professional 2D Herdsman mini-game with enhanced features",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit"
   },
+  "keywords": [
+    "game",
+    "pixi",
+    "typescript",
+    "2d-game",
+    "canvas"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
   "dependencies": {
     "pixi.js": "^8.5.2",
     "@pixi/sound": "^6.0.1"
   },
   "devDependencies": {
-    "@types/node": "^20.17.10",
-    "typescript": "^5.7.2",
-    "vite": "^6.0.5"
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11",
+    "@types/node": "^22.9.0"
   }
 }

@@ -1,3 +1,4 @@
+import * as PIXI from 'pixi.js';
 import { Animal } from '../entities/Animal';
 import { Hero } from '../entities/Hero';
 import { Yard } from '../entities/Yard';
@@ -15,11 +16,14 @@ export class AnimalManager {
   private screenWidth: number;
   private screenHeight: number;
   
+  private connectionLinesContainer: PIXI.Graphics;
+  
   private onScoreChange?: (score: number) => void;
   private onAnimalAdded?: (animal: Animal) => void;
   private onAnimalRemoved?: (animal: Animal) => void;
   private onAnimalCollected?: () => void;
   private onAnimalScored?: () => void;
+  private onHerdCountChange?: (count: number) => void;
 
   constructor(
     hero: Hero,
@@ -32,6 +36,8 @@ export class AnimalManager {
     this.screenWidth = screenWidth;
     this.screenHeight = screenHeight;
     
+    this.connectionLinesContainer = new PIXI.Graphics();
+    
     this.scheduleNextSpawn();
   }
 
@@ -41,6 +47,7 @@ export class AnimalManager {
     this.updateHerdLogic();
     this.checkYardCollisions();
     this.updateSpawnSystem();
+    this.updateConnectionLines();
   }
 
   private updateHerdLogic(): void {
@@ -58,6 +65,7 @@ export class AnimalManager {
     });
     
     const currentlyFollowing = this.animals.filter(a => a.isFollowing());
+    const previousCount = currentlyFollowing.length;
     
     for (let i = 0; i < candidateAnimals.length; i++) {
       const animal = candidateAnimals[i];
@@ -83,6 +91,33 @@ export class AnimalManager {
       if (distance > followDistance && !candidateAnimals.includes(animal)) {
         animal.stopFollowing();
       }
+    }
+
+    // Notify herd count changes
+    const newFollowingCount = this.animals.filter(a => a.isFollowing()).length;
+    if (newFollowingCount !== previousCount && this.onHerdCountChange) {
+      this.onHerdCountChange(newFollowingCount);
+    }
+  }
+
+  private updateConnectionLines(): void {
+    if (!GameConfig.CONNECTION_LINES_ENABLED) {
+      this.connectionLinesContainer.clear();
+      return;
+    }
+
+    this.connectionLinesContainer.clear();
+
+    const followingAnimals = this.animals.filter(a => a.isFollowing());
+
+    for (const animal of followingAnimals) {
+      this.connectionLinesContainer.moveTo(this.hero.position.x, this.hero.position.y);
+      this.connectionLinesContainer.lineTo(animal.position.x, animal.position.y);
+      this.connectionLinesContainer.stroke({
+        color: GameConfig.CONNECTION_LINE_COLOR,
+        width: GameConfig.CONNECTION_LINE_WIDTH,
+        alpha: GameConfig.CONNECTION_LINE_ALPHA,
+      });
     }
   }
 
@@ -115,6 +150,12 @@ export class AnimalManager {
     
     if (this.onAnimalRemoved) {
       this.onAnimalRemoved(animal);
+    }
+
+    // Update herd count
+    const followingCount = this.animals.filter(a => a.isFollowing()).length;
+    if (this.onHerdCountChange) {
+      this.onHerdCountChange(followingCount);
     }
   }
 
@@ -219,6 +260,10 @@ export class AnimalManager {
     return this.score;
   }
 
+  public getConnectionLinesContainer(): PIXI.Graphics {
+    return this.connectionLinesContainer;
+  }
+
   public setOnScoreChange(callback: (score: number) => void): void {
     this.onScoreChange = callback;
   }
@@ -237,6 +282,10 @@ export class AnimalManager {
 
   public setOnAnimalScored(callback: () => void): void {
     this.onAnimalScored = callback;
+  }
+
+  public setOnHerdCountChange(callback: (count: number) => void): void {
+    this.onHerdCountChange = callback;
   }
 
   public updateScreenBounds(width: number, height: number): void {
